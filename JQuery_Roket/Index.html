@@ -19,13 +19,13 @@
 
             //使紅色方塊player，點擊左鍵變色
             $player.click(function () {
-                $player.css("background", "#FFFF00");
+                console.log($player.css("left"));
             })
             //使紅色方塊player，點擊右鍵變色(關閉右鍵的Menu)
             $player.contextmenu(function (e) {
                 //在contextmenu設定該行，設定參數e可以關右鍵產生的Menu!
                 e.preventDefault();
-                $player.css("background", "#0000FF");
+                console.log($player.css("left"));
             })
         })
     </script>
