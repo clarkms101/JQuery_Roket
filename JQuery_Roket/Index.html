@@ -18,9 +18,10 @@
                 $stage = $('#stage'),
                 $player = $('#player'),
                 enemy_fail_speed = 3,
-                enemy_fail_max_speed = 9,
+                enemy_fail_max_speed = 11,
                 enemy_wave = 0,
-                enemy_wave_gap =250;
+                enemy_wave_gap = 250,
+                hit_test_r = 20;
 
             //player 初始位置
             $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
@@ -60,14 +61,15 @@
                     //儲存每次的enemy波數!
                     $enemy.data("wave", enemy_wave);
                     var rand_index = getRandomInt(0, enemy_pos.length - 1);
-                    //障礙物的起始位置
                     var enemy_x = enemy_pos.splice(rand_index, 1)[0];
+                    //障礙物的起始位置
                     $enemy.css("left", enemy_x + "px");
+                    $enemy.css("top", -($enemy.height()) + "px");
                 }
             }
 
             //計時器(處理：落下動畫、碰撞機制)
-            var timer = setInterval(function () {
+            var loop = setInterval(function () {
                 //讓每個enemy都執行到該function
                 $stage.find(".enemy").each(function () {
                     var enemy_y = parseInt($(this).css("top"));
@@ -77,6 +79,18 @@
                     if (enemy_y > enemy_wave_gap && $(this).data("wave") == enemy_wave) {
                         enemy_wave++;
                         createEnemy();
+                    }
+
+                    //圓心點(player, enemy)
+                    var px = parseInt($player.css("left")) + $player.width() / 2;
+                    var py = parseInt($player.css("top")) + $player.height() / 2;
+                    var ex = parseInt($(this).css("left")) + $(this).width() / 2;
+                    var ey = parseInt($(this).css("top")) + $(this).height() / 2;
+                    var p_e_dist = Math.sqrt(Math.pow(px - ex, 2) + Math.pow(py - ey, 2));
+
+                    //兩圓碰撞!
+                    if (hit_test_r*2 > p_e_dist) {
+                        clearInterval(loop);
                     }
 
                     //刪除超出stage邊界的enemy物件
