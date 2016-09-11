@@ -17,7 +17,8 @@
             var $body = $("body"),
                 $stage = $('#stage'),
                 $player = $('#player'),
-                enemy_fail_speed = 3;
+                enemy_fail_speed = 3,
+                enemy_wave = 0;
 
             //player 初始位置
             $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
@@ -44,19 +45,24 @@
 
             })
 
-            //障礙物的初始可能位置
-            var enemy_pos = [10, 110, 210];
-            //加入障礙物(即enemy)
-            for (var i = 0; i < 2; i++) {
-                //新增 enemy
-                $stage.append("<div class='sprite enemy'></div>");
-                //取得 enemy(用last取，保證每次取得都是最新的，以便設定位置!)
-                var $enemy = $stage.find(".enemy:last");
+            //第一波生成障礙物
+            createEnemy();
 
-                var rand_index = getRandomInt(0, enemy_pos.length - 1);
-                //障礙物的起始位置
-                var enemy_x = enemy_pos.splice(rand_index, 1)[0];
-                $enemy.css("left", enemy_x + "px");
+            //後續生成障礙物
+            function createEnemy() {
+                var enemy_pos = [10, 110, 210];
+                for (var i = 0; i < 2; i++) {
+                    //新增 enemy
+                    $stage.append("<div class='sprite enemy'></div>");
+                    //取得 enemy(用last取，保證每次取得都是最新的，以便設定位置!)
+                    var $enemy = $stage.find(".enemy:last");
+                    //儲存每次的enemy波數!
+                    $enemy.data("wave", enemy_wave);
+                    var rand_index = getRandomInt(0, enemy_pos.length - 1);
+                    //障礙物的起始位置
+                    var enemy_x = enemy_pos.splice(rand_index, 1)[0];
+                    $enemy.css("left", enemy_x + "px");
+                }
             }
 
             //計時器(處理：落下動畫、碰撞機制)
@@ -64,6 +70,17 @@
                 //讓每個enemy都執行到該function
                 $stage.find(".enemy").each(function () {
                     var enemy_y = parseInt($(this).css("top"));
+                    //障礙物降下一定的路離後，接著再產生下個障礙物
+                    if (enemy_y > 100 && $(this).data("wave") == enemy_wave) {
+                        enemy_wave++;
+                        createEnemy();
+                    }
+                    //刪除超出stage邊界的enemy物件
+                    if (enemy_y > $stage.height()) {
+                        $(this).remove();
+                        return;
+                    }
+
                     $(this).css("top", enemy_y + enemy_fail_speed + "px");
                 })
             }, 1000 / 30)
@@ -86,7 +103,7 @@
             top: 50px;
             width: 300px;
             height: 500px;
-            overflow: hidden;
+            /*overflow: hidden;*/
             text-align: left;
             display: inline-block;
             background-color: black;
@@ -105,7 +122,7 @@
         }
 
         .enemy {
-            background-color: yellow;
+            background-color: blue;
         }
     </style>
 </head>
