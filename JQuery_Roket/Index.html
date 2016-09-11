@@ -16,7 +16,8 @@
             //變數連續宣告，聽說可以增加效能@@
             var $body = $("body"),
                 $stage = $('#stage'),
-                $player = $('#player');
+                $player = $('#player'),
+                enemy_fail_speed = 3;
 
             //player 初始位置
             $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
@@ -58,15 +59,19 @@
                 $enemy.css("left", enemy_x + "px");
             }
 
-            //計時器
+            //計時器(處理：落下動畫、碰撞機制)
             var timer = setInterval(function () {
                 //讓每個enemy都執行到該function
                 $stage.find(".enemy").each(function () {
-                    //讓每個enemy下降
                     var enemy_y = parseInt($(this).css("top"));
-                    $(this).css("top", enemy_y + 10 + "px");
+                    $(this).css("top", enemy_y + enemy_fail_speed + "px");
                 })
-            }, 1000/30)
+            }, 1000 / 30)
+
+            //計時器(處理：提高落下的值(加速))
+            var speedup = setInterval(function () {
+                enemy_fail_speed += 1;
+            }, 1000)
         })
     </script>
     <style>
