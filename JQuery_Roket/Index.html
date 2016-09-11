@@ -11,9 +11,22 @@
             //JQuery物件前面習慣加上$，以和其它的物件變數作區隔！
             var $stage = $('#stage');
             var $player = $('#player');
-            //使紅色方塊player水平置中舞台stage
-            $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
 
+            //使紅色方塊player，水平置中舞台stage(X軸調整)
+            $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
+            //使紅色方塊player，水平置底舞台stage(Y軸調整)
+            $player.css("top", $stage.height() - $player.height());
+
+            //使紅色方塊player，點擊左鍵變色
+            $player.click(function () {
+                $player.css("background", "#FFFF00");
+            })
+            //使紅色方塊player，點擊右鍵變色(關閉右鍵的Menu)
+            $player.contextmenu(function (e) {
+                //在contextmenu設定該行，設定參數e可以關右鍵產生的Menu!
+                e.preventDefault();
+                $player.css("background", "#0000FF");
+            })
         })
     </script>
     <style>
