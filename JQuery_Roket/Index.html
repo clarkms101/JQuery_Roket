@@ -6,6 +6,11 @@
     <meta charset="utf-8" />
     <script src="Scripts/jquery-3.0.0.min.js"></script>
     <script>
+        //取出隨機整數
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
         //檔DOM讀取完畢執行
         $(function () {
             //變數連續宣告，聽說可以增加效能@@
@@ -38,8 +43,21 @@
 
             })
 
-            //加入障礙物
-            $stage.append("<div class='sprite enemy'></div>")
+            //障礙物的初始可能位置
+            var enemy_pos = [10, 110, 210]; 
+            //加入障礙物(即enemy)
+            for (var i = 0; i < 2; i++) {
+                //新增 enemy
+                $stage.append("<div class='sprite enemy'></div>");
+                //取得 enemy
+                var $enemy = $stage.find(".enemy:last");
+
+                var rand_index = getRandomInt(0, enemy_pos.length - 1);
+                //障礙物的起始位置
+                var enemy_x = enemy_pos.splice(rand_index, 1)[0];
+                $enemy.css("left", enemy_x + "px");
+            }
+
         })
     </script>
     <style>
