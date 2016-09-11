@@ -44,7 +44,7 @@
             })
 
             //障礙物的初始可能位置
-            var enemy_pos = [10, 110, 210]; 
+            var enemy_pos = [10, 110, 210];
             //加入障礙物(即enemy)
             for (var i = 0; i < 2; i++) {
                 //新增 enemy
@@ -58,6 +58,15 @@
                 $enemy.css("left", enemy_x + "px");
             }
 
+            //計時器
+            var timer = setInterval(function () {
+                //讓每個enemy都執行到該function
+                $stage.find(".enemy").each(function () {
+                    //讓每個enemy下降
+                    var enemy_y = parseInt($(this).css("top"));
+                    $(this).css("top", enemy_y + 10 + "px");
+                })
+            }, 1000/30)
         })
     </script>
     <style>
@@ -75,14 +84,13 @@
             overflow: hidden;
             text-align: left;
             display: inline-block;
-
             background-color: black;
         }
 
         .sprite {
             /*絕對定位*/
-            position:absolute;
-            display: inline-block;            
+            position: absolute;
+            display: inline-block;
             width: 80px;
             height: 80px;
         }
