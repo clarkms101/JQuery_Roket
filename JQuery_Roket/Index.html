@@ -49,7 +49,7 @@
             for (var i = 0; i < 2; i++) {
                 //新增 enemy
                 $stage.append("<div class='sprite enemy'></div>");
-                //取得 enemy
+                //取得 enemy(用last取，保證每次取得都是最新的，以便設定位置!)
                 var $enemy = $stage.find(".enemy:last");
 
                 var rand_index = getRandomInt(0, enemy_pos.length - 1);
