@@ -23,7 +23,9 @@
                 enemy_wave = 0,
                 enemy_wave_gap = 250,
                 hit_test_r = 20,
-                can_control_player = true;
+                can_control_player = true,
+                score = 0,
+                score_add = 1;
 
             //player 初始位置
             $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
@@ -114,6 +116,10 @@
                     }
 
                     $(this).css("top", enemy_y + enemy_fail_speed + "px");
+
+                    //計分顯示
+                    $score.html(score);
+                    score += score_add;
                 })
             }, 1000 / 60) //60偵數，每秒60次
 
@@ -124,6 +130,7 @@
                     clearInterval(speedup);
                 }
                 enemy_fail_speed += 0.1;
+                score_add *= 2;
                 //console.log(enemy_fail_speed);
             }, 1000)
         })
@@ -163,6 +170,7 @@
             font-size:large;
             width:auto;
             height:auto;
+            text-align: right;
         }
         .enemy {
             background-color: blue;
