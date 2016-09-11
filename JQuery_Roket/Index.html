@@ -8,23 +8,24 @@
     <script>
         //檔DOM讀取完畢執行
         $(function () {
-            //JQuery物件前面習慣加上$，以和其它的物件變數作區隔！
-            var $stage = $('#stage');
-            var $player = $('#player');
+            //變數連續宣告，聽說可以增加效能@@
+            var $body = $("body"),
+                $stage = $('#stage'),
+                $player = $('#player');
 
             //使紅色方塊player，水平置中舞台stage(X軸調整)
             $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
             //使紅色方塊player，水平置底舞台stage(Y軸調整)
             $player.css("top", $stage.height() - $player.height());
 
-            //使紅色方塊player，點擊左鍵往左邊移動
-            $player.click(function () {
+            //Body點擊左鍵，紅色方塊player往左邊移動
+            $body.click(function () {
                 //parseInt只取數值出來
                 var x = parseInt($player.css("left"));
                 $player.css("left", x-50+"px");
             })
-            //使紅色方塊player，點擊右鍵往右邊移動
-            $player.contextmenu(function (e) {
+            //Body點擊右鍵，紅色方塊player往右邊移動
+            $body.contextmenu(function (e) {
                 //在contextmenu設定該行，設定參數e可以關右鍵產生的Menu!
                 e.preventDefault();
                 var x = parseInt($player.css("left"));
