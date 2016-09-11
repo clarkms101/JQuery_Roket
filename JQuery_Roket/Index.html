@@ -48,7 +48,6 @@
             //第一波生成障礙物
             createEnemy();
 
-            //後續生成障礙物
             function createEnemy() {
                 var enemy_pos = [10, 110, 210];
                 for (var i = 0; i < 2; i++) {
@@ -70,11 +69,13 @@
                 //讓每個enemy都執行到該function
                 $stage.find(".enemy").each(function () {
                     var enemy_y = parseInt($(this).css("top"));
-                    //障礙物降下一定的路離後，接著再產生下個障礙物
+
+                    //後續生成障礙物--障礙物降下一定的路離後，接著再產生下個障礙物
                     if (enemy_y > 100 && $(this).data("wave") == enemy_wave) {
                         enemy_wave++;
                         createEnemy();
                     }
+
                     //刪除超出stage邊界的enemy物件
                     if (enemy_y > $stage.height()) {
                         $(this).remove();
