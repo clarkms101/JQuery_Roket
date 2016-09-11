@@ -13,24 +13,33 @@
                 $stage = $('#stage'),
                 $player = $('#player');
 
-            //使紅色方塊player，水平置中舞台stage(X軸調整)
+            //player 初始位置
             $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
-            //使紅色方塊player，水平置底舞台stage(Y軸調整)
             $player.css("top", $stage.height() - $player.height());
 
             //Body點擊左鍵，紅色方塊player往左邊移動
             $body.click(function () {
                 //parseInt只取數值出來
                 var x = parseInt($player.css("left"));
-                $player.css("left", x-50+"px");
+                //設定左移限界
+                if (x > 10) {
+                    $player.css("left", x - 100 + "px");
+                }
             })
             //Body點擊右鍵，紅色方塊player往右邊移動
             $body.contextmenu(function (e) {
                 //在contextmenu設定該行，設定參數e可以關右鍵產生的Menu!
                 e.preventDefault();
                 var x = parseInt($player.css("left"));
-                $player.css("left", x + 50 + "px");
+                //設定右移限界
+                if (x < 210) {
+                    $player.css("left", x + 100 + "px");
+                }
+
             })
+
+            //加入障礙物
+            $stage.append("<div class='sprite enemy'></div>")
         })
     </script>
     <style>
@@ -40,26 +49,32 @@
         }
 
         #stage {
-            /*裡面的所有物件置左*/
-            text-align: left;
-            display: inline-block;
-            background-color: black;
+            /*相對定位*/
+            position: relative;
             top: 50px;
             width: 300px;
             height: 500px;
-            /*隱藏超出此物件邊界的物件區域*/
             overflow: hidden;
+            text-align: left;
+            display: inline-block;
+
+            background-color: black;
         }
 
         .sprite {
-            display: inline-block;
-            /*相對位置--*/
-            position: relative;
-            left: -20px;
-            /*相對位置--*/
-            background-color: red;
+            /*絕對定位*/
+            position:absolute;
+            display: inline-block;            
             width: 80px;
             height: 80px;
+        }
+
+        #player {
+            background-color: red;
+        }
+
+        .enemy {
+            background-color: yellow;
         }
     </style>
 </head>
