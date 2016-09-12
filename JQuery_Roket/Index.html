@@ -18,6 +18,7 @@
                 $stage = $("#stage"),
                 $player = $("#player"),
                 $score = $("#score"),
+                $nowSpeed = $("#nowSpeed"),
                 enemy_fail_speed = 3,
                 enemy_fail_max_speed = 11,
                 enemy_wave = 0,
@@ -25,7 +26,8 @@
                 hit_test_r = 20,
                 can_control_player = true,
                 score = 0,
-                score_add = 1;
+                score_add = 1,
+                nowSpeed = 0;
 
             //player 初始位置
             $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
@@ -34,6 +36,10 @@
             //score 初始位置
             $score.css("left", $stage.width() - $score.width() - 5 + "px");
             $score.css("top", "5px");
+
+            //顯示目前落下速度
+            nowSpeed = parseInt(enemy_fail_speed);
+            $nowSpeed.html('Speed:'+nowSpeed);
 
             //Body點擊左鍵，紅色方塊player往左邊移動
             $body.click(function () {
@@ -120,6 +126,7 @@
                     //計分顯示
                     $score.html(score);
                     score += score_add;
+                    score = parseInt(score);
                 })
             }, 1000 / 60) //60偵數，每秒60次
 
@@ -129,8 +136,11 @@
                 if (enemy_fail_speed >= enemy_fail_max_speed) {
                     clearInterval(speedup);
                 }
-                enemy_fail_speed += 0.1;
-                score_add *= 2;
+                enemy_fail_speed += 0.3;
+                score_add *= 1.1;
+                //刷新目前落下速度
+                nowSpeed = parseInt(enemy_fail_speed);
+                $nowSpeed.html('Speed:'+nowSpeed);
                 //console.log(enemy_fail_speed);
             }, 1000)
         })
@@ -164,15 +174,27 @@
         #player {
             background-color: red;
         }
-        #score{
-            color:white;
-            font-weight:bolder;
-            font-size:large;
-            width:100%;
-            height:auto;
+
+        #score {
+            color: white;
+            font-size: 24px;
+            font-weight: bolder;
+            width: 100%;
+            height: auto;
             text-align: right;
-            z-index:999;
+            z-index: 999;
         }
+
+        #nowSpeed {
+            color: white;
+            font-size: 25px;
+            font-weight: bolder;
+            width: 100%;
+            height: auto;
+            text-align: left;
+            z-index: 999;
+        }
+
         .enemy {
             background-color: blue;
         }
@@ -181,7 +203,8 @@
 <body>
 
     <div id="stage">
-        <div id="score" class="sprite">00000000</div>
+        <div id="nowSpeed" class="sprite"></div>
+        <div id="score" class="sprite"></div>
         <div id="player" class="sprite">
         </div>
     </div>
