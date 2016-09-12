@@ -67,8 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Image\Rocket.png" />
+    <Content Include="Image\Rocket_jpg.jpg" />
     <Content Include="Image\Space.jpg" />
     <Content Include="Image\Stone.png" />
+    <Content Include="Image\Stone_jpg.jpg" />
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-3.0.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.0.0.min.map" />
