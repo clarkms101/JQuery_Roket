@@ -24,48 +24,65 @@
                 enemy_wave = 0,
                 enemy_wave_gap = 250,
                 hit_test_r = 20,
-                can_control_player = true,
                 score = 0,
                 score_add = 1,
-                nowSpeed = 0;
-
-            //player 初始位置
-            $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
-            $player.css("top", $stage.height() - $player.height());
-
-            //score 初始位置
-            $score.css("left", $stage.width() - $score.width() - 5 + "px");
-            $score.css("top", "5px");
+                nowSpeed = 0,
+                loop,
+                speedup;
 
             //顯示目前落下速度
             nowSpeed = parseInt(enemy_fail_speed);
             $nowSpeed.html('Speed:'+nowSpeed);
 
-            //Body點擊左鍵，紅色方塊player往左邊移動
-            $body.click(function () {
-
-                if (can_control_player) {
-                    var x = parseInt($player.css("left"));
-                    //設定左移限界
-                    if (x > 10) {
-                        $player.css("left", x - 100 + "px");
-                    }
+            //Body點擊左鍵
+            function left_click_action() {
+                var x = parseInt($player.css("left"));
+                //設定左移限界
+                if (x > 10) {
+                    $player.css("left", x - 100 + "px");
                 }
-            });
-
-            //Body點擊右鍵，紅色方塊player往右邊移動
-            $body.contextmenu(function (e) {
+            }
+            //Body點擊右鍵
+            function right_click_action(e) {
                 //在contextmenu設定該行，設定參數e可以關右鍵產生的Menu!
                 e.preventDefault();
-
-                if (can_control_player) {
-                    var x = parseInt($player.css("left"));
-                    //設定右移限界
-                    if (x < 210) {
-                        $player.css("left", x + 100 + "px");
-                    }
+                var x = parseInt($player.css("left"));
+                //設定右移限界
+                if (x < 210) {
+                    $player.css("left", x + 100 + "px");
                 }
-            })
+            }
+
+            //重新開始
+            function initGame() {
+                enemy_fail_speed = 3,
+                enemy_wave = 0,
+                score = 0,
+                score_add = 1,
+                nowSpeed = 0;
+
+                //player 初始位置
+                $player.css("left", ($stage.width() - $player.width()) / 2 + "px");
+                $player.css("top", $stage.height() - $player.height());
+
+                //score 初始位置
+                $score.css("left", $stage.width() - $score.width() - 5 + "px");
+                $score.css("top", "5px");
+
+                //建立障礙物
+                createEnemy();
+
+                //計時器建立
+                loop = setInterval(loop_func, 1000 / 60);
+                speedup = setInterval(speedup_func, 1000);
+
+                //player加入移動控制
+                $body.click(left_click_action);
+                $body.contextmenu(right_click_action)
+
+            }
+            //初始化
+            initGame();
 
             //生成障礙物
             function createEnemy() {
@@ -88,12 +105,18 @@
 
             //遊戲結束
             function endGame() {
-                //停止產生enemy，移除對player的控制
-                can_control_player = false;
+                //player移除移動控制
+                $body.unbind("click");
+                $body.unbind("contextmenu");
+
+                //停止所有計時器
                 clearInterval(loop);
+                clearInterval(speedup);
+
                 //跳出結束畫面
                 $stage.append("<div id='gameover'>RETRY</div>");
-                $("#gameover").css({
+                $gameover = $("#gameover");
+                $gameover.css({
                     "background": "black",
                     "opacity": "0.7",
                     "width": "100%",
@@ -101,14 +124,26 @@
                     "position": "relative",
                     "color": "white",
                     "font-size": "35px",
-                    //設定置中!
+                    //文字設定置中!
                     "line-height": "500px",
-                    "text-align":"center"
-                })
+                    "text-align": "center"
+                });
+                //點擊Retry Game
+                $gameover.click(function () {
+                    $gameover.unbind("click");
+                    //清除retry畫面
+                    $gameover.remove();
+                    //清空Enemy
+                    $stage.find(".enemy").remove();
+                    //重設player位置，和參數重置
+                    initGame();
+                });
             }
 
             //計時器(處理：落下動畫、碰撞機制)
-            var loop = setInterval(function () {
+            //var loop = setInterval(loop_func, 1000 / 60); //60偵數，每秒60次
+
+            function loop_func() {
                 //讓每個enemy都執行到該function
                 $stage.find(".enemy").each(function () {
                     var enemy_y = parseInt($(this).css("top"));
@@ -145,10 +180,12 @@
                     score += score_add;
                     score = parseInt(score);
                 })
-            }, 1000 / 60) //60偵數，每秒60次
+            }
 
             //計時器(處理：每秒提高落下的值(加速))
-            var speedup = setInterval(function () {
+            //var speedup = setInterval(speedup_func, 1000);
+
+            function speedup_func() {
                 //速度上限設定，超過則清除該計時器
                 if (enemy_fail_speed >= enemy_fail_max_speed) {
                     clearInterval(speedup);
@@ -159,8 +196,10 @@
                 nowSpeed = parseInt(enemy_fail_speed);
                 $nowSpeed.html('Speed:'+nowSpeed);
                 //console.log(enemy_fail_speed);
-            }, 1000)
+            }
+
         })
+
     </script>
     <style>
         body {
@@ -222,7 +261,7 @@
     </style>
 </head>
 <body>
-    <!--TODO 5/6 22:34-->
+    <!--TODO 6/6 16:44-->
     <div id="stage">
         <div id="nowSpeed" class="sprite"></div>
         <div id="score" class="sprite"></div>
