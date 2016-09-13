@@ -67,10 +67,7 @@
                 }
             })
 
-
-            //第一波生成障礙物
-            createEnemy();
-
+            //生成障礙物
             function createEnemy() {
                 var enemy_pos = [10, 110, 210];
                 for (var i = 0; i < 2; i++) {
@@ -86,6 +83,28 @@
                     $enemy.css("left", enemy_x + "px");
                     $enemy.css("top", -($enemy.height()) + "px");
                 }
+            }
+            createEnemy();
+
+            //遊戲結束
+            function endGame() {
+                //停止產生enemy，移除對player的控制
+                can_control_player = false;
+                clearInterval(loop);
+                //跳出結束畫面
+                $stage.append("<div id='gameover'>RETRY</div>");
+                $("#gameover").css({
+                    "background": "black",
+                    "opacity": "0.7",
+                    "width": "100%",
+                    "height": "100%",
+                    "position": "relative",
+                    "color": "white",
+                    "font-size": "35px",
+                    //設定置中!
+                    "line-height": "500px",
+                    "text-align":"center"
+                })
             }
 
             //計時器(處理：落下動畫、碰撞機制)
@@ -108,11 +127,9 @@
                     var ey = parseInt($(this).css("top")) + $(this).height() / 2;
                     var p_e_dist = Math.sqrt(Math.pow(px - ex, 2) + Math.pow(py - ey, 2));
 
-                    //兩圓碰撞!
+                    //兩圓碰撞!Game Over!
                     if (hit_test_r * 2 > p_e_dist) {
-                        //停止產生enemy，移除對player的控制
-                        can_control_player = false;
-                        clearInterval(loop);
+                        endGame();
                     }
 
                     //刪除超出stage邊界的enemy物件
@@ -178,7 +195,8 @@
         }
 
         .enemy {
-            background-color: blue;
+            /*background-color: blue;*/
+            background-image: url('Image/Bomb.png');
         }
 
         #score {
@@ -204,7 +222,7 @@
     </style>
 </head>
 <body>
-
+    <!--TODO 5/6 22:34-->
     <div id="stage">
         <div id="nowSpeed" class="sprite"></div>
         <div id="score" class="sprite"></div>
